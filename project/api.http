@@ -1,0 +1,248 @@
+### Base URL
+@baseUrl = http://localhost:5000/api
+@userToken = YOUR_USER_TOKEN_HERE
+@agentToken = YOUR_AGENT_TOKEN_HERE
+
+### Health Check
+GET http://localhost:5000/
+
+###################################################
+# AUTH ENDPOINTS
+###################################################
+
+### User Signup
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Aayush Kumar",
+  "email": "aayush1@gmail.com",
+  "password": "123456",
+  "phone": "9876543210",
+  "address": "123 Main Street, Delhi"
+}
+
+### User Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "aayush@gmail.com",
+  "password": "123456"
+}
+
+### Agent Signup
+POST {{baseUrl}}/auth/agent/signup
+Content-Type: application/json
+
+{
+  "name": "Dr. Rajesh Sharma",
+  "email": "rajesh@physio.com",
+  "password": "agent123",
+  "phone": "9988776655",
+  "specialization": "Sports Physiotherapy"
+}
+
+### Agent Login
+POST {{baseUrl}}/auth/agent/login
+Content-Type: application/json
+
+{
+  "email": "rajesh@physio.com",
+  "password": "agent123"
+}
+
+###################################################
+# USER ENDPOINTS
+###################################################
+
+### Get User Profile
+GET {{baseUrl}}/users/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTgyZDYyMzQxMzVhYTM3MmYwNjdkYSIsImlhdCI6MTc2MzE5MzYxOSwiZXhwIjoxNzY1Nzg1NjE5fQ.wb5CG336IVdJZrrIsb-4cKQvT5Hpi8pi3YTV4BkcNPk
+
+### Update User Profile
+PUT {{baseUrl}}/users/profile
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "name": "Aayush Kumar Updated",
+  "phone": "9876543211",
+  "address": "456 New Street, Delhi",
+  "coordinates": {
+    "latitude": 28.7041,
+    "longitude": 77.1025
+  },
+  "profileImage": "https://example.com/profile.jpg"
+}
+
+###################################################
+# SERVICE ENDPOINTS
+###################################################
+
+### Create Service
+POST {{baseUrl}}/services
+Content-Type: application/json
+
+{
+  "title": "Full Body Massage Therapy",
+  "description": "Complete body massage therapy for pain relief and relaxation. Includes deep tissue massage and stretching exercises.",
+  "price": 800,
+  "durationMins": 60,
+  "category": "Pain Management",
+  "imageUrl": "https://images.pexels.com/photos/3757942/pexels-photo-3757942.jpeg"
+}
+
+### Create Another Service
+POST {{baseUrl}}/services
+Content-Type: application/json
+
+{
+  "title": "Sports Injury Recovery",
+  "description": "Specialized therapy for sports-related injuries. Focuses on faster recovery and preventing future injuries.",
+  "price": 1200,
+  "durationMins": 90,
+  "category": "Sports Injury",
+  "imageUrl": "https://images.pexels.com/photos/6111597/pexels-photo-6111597.jpeg"
+}
+
+### Get All Services
+GET {{baseUrl}}/services
+
+### Get Service By ID
+GET {{baseUrl}}/services/SERVICE_ID_HERE
+
+### Update Service
+PUT {{baseUrl}}/services/SERVICE_ID_HERE
+Content-Type: application/json
+
+{
+  "title": "Full Body Massage Therapy - Updated",
+  "price": 850,
+  "isActive": true
+}
+
+### Delete Service (Soft Delete)
+DELETE {{baseUrl}}/services/SERVICE_ID_HERE
+
+###################################################
+# BOOKING ENDPOINTS
+###################################################
+
+### Create Booking
+POST {{baseUrl}}/bookings
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTgyZDYyMzQxMzVhYTM3MmYwNjdkYSIsImlhdCI6MTc2MzIwODg2MywiZXhwIjoxNzY1ODAwODYzfQ.crEVUaTompSOXAr5cXa2xOutuWtwgGomIZlNWjluqUE
+Content-Type: application/json
+
+{
+  "serviceId": "6918454579fb2a8afacccbb3",
+  "selectedDate": "2025-11-20",
+  "selectedTime": "10:00 AM",
+  "userAddress": "Jahangirpuri",
+  "coordinates": {
+    "latitude": 28.6315,
+    "longitude": 77.2167
+  }
+}
+
+### Get My Bookings
+GET {{baseUrl}}/bookings/my
+Authorization: Bearer {{userToken}}
+
+### Get Booking By ID
+GET {{baseUrl}}/bookings/BOOKING_ID_HERE
+Authorization: Bearer {{userToken}}
+
+### Cancel Booking
+PUT {{baseUrl}}/bookings/BOOKING_ID_HERE/cancel
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "reason": "Changed my schedule"
+}
+
+###################################################
+# AGENT ENDPOINTS
+###################################################
+
+### Get Agent Profile
+GET {{baseUrl}}/agents/profile
+Authorization: Bearer {{agentToken}}
+
+### Get Agent's Bookings
+GET {{baseUrl}}/agents/bookings
+Authorization: Bearer {{agentToken}}
+
+### Get All Bookings (Admin View)
+GET {{baseUrl}}/agents/bookings/all
+Authorization: Bearer {{agentToken}}
+
+### Get All Pending Bookings
+GET {{baseUrl}}/agents/bookings/all?status=pending
+Authorization: Bearer {{agentToken}}
+
+### Update Booking Status to Confirmed
+PUT {{baseUrl}}/agents/bookings/BOOKING_ID_HERE/status
+Authorization: Bearer {{agentToken}}
+Content-Type: application/json
+
+{
+  "bookingStatus": "confirmed"
+}
+
+### Update Booking Status to On-The-Way
+PUT {{baseUrl}}/agents/bookings/BOOKING_ID_HERE/status
+Authorization: Bearer {{agentToken}}
+Content-Type: application/json
+
+{
+  "bookingStatus": "on-the-way"
+}
+
+### Update Booking Status to Completed
+PUT {{baseUrl}}/agents/bookings/BOOKING_ID_HERE/status
+Authorization: Bearer {{agentToken}}
+Content-Type: application/json
+
+{
+  "bookingStatus": "completed"
+}
+
+### Update Payment Status
+PUT {{baseUrl}}/agents/bookings/BOOKING_ID_HERE/payment
+Authorization: Bearer {{agentToken}}
+Content-Type: application/json
+
+{
+  "paymentStatus": "paid"
+}
+
+###################################################
+# FEEDBACK ENDPOINTS
+###################################################
+
+### Submit Feedback
+POST {{baseUrl}}/feedback
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "bookingId": "BOOKING_ID_HERE",
+  "rating": 5,
+  "reviewMessage": "Excellent service! The therapist was very professional and the treatment was effective. Highly recommend!"
+}
+
+### Get My Feedback
+GET {{baseUrl}}/feedback/my
+Authorization: Bearer {{userToken}}
+
+### Get Service Feedback
+GET {{baseUrl}}/feedback/service/SERVICE_ID_HERE
+
+###################################################
+# BILLING ENDPOINTS
+###################################################
+
+### Get Invoice/Billing Details
+GET {{baseUrl}}/billing/BOOKING_ID_HERE
