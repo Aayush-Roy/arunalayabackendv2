@@ -27,7 +27,7 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "aayush@gmail.com",
+  "email": "aayush1@gmail.com",
   "password": "123456"
 }
 
@@ -113,12 +113,12 @@ GET {{baseUrl}}/services
 GET {{baseUrl}}/services/SERVICE_ID_HERE
 
 ### Update Service
-PUT {{baseUrl}}/services/SERVICE_ID_HERE
+PUT {{baseUrl}}/services/6918454579fb2a8afacccbb3
 Content-Type: application/json
 
 {
   "title": "Full Body Massage Therapy - Updated",
-  "price": 850,
+  "price": 950,
   "isActive": true
 }
 
@@ -131,14 +131,14 @@ DELETE {{baseUrl}}/services/SERVICE_ID_HERE
 
 ### Create Booking
 POST {{baseUrl}}/bookings
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTgyZDYyMzQxMzVhYTM3MmYwNjdkYSIsImlhdCI6MTc2MzIwODg2MywiZXhwIjoxNzY1ODAwODYzfQ.crEVUaTompSOXAr5cXa2xOutuWtwgGomIZlNWjluqUE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTg2ZTljOGZlNzQzMWM1MmQ1OGFmMSIsImlhdCI6MTc2MzIxMjA3MCwiZXhwIjoxNzY1ODA0MDcwfQ.enfqDdmKLbuYQcWbmd2jb6KVFX5G1fw46yYvYmENXpY
 Content-Type: application/json
 
 {
   "serviceId": "6918454579fb2a8afacccbb3",
   "selectedDate": "2025-11-20",
-  "selectedTime": "10:00 AM",
-  "userAddress": "Jahangirpuri",
+  "selectedTime": "11:00 AM",
+  "userAddress": "adarsh nagar",
   "coordinates": {
     "latitude": 28.6315,
     "longitude": 77.2167
@@ -147,18 +147,20 @@ Content-Type: application/json
 
 ### Get My Bookings
 GET {{baseUrl}}/bookings/my
-Authorization: Bearer {{userToken}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTg2ZTljOGZlNzQzMWM1MmQ1OGFmMSIsImlhdCI6MTc2MzIxMjA3MCwiZXhwIjoxNzY1ODA0MDcwfQ.enfqDdmKLbuYQcWbmd2jb6KVFX5G1fw46yYvYmENXpY
 
 ### Get Booking By ID
-GET {{baseUrl}}/bookings/BOOKING_ID_HERE
-Authorization: Bearer {{userToken}}
+
+
+GET {{baseUrl}}/bookings/6918484d0cc0592b95900515
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTg2ZTljOGZlNzQzMWM1MmQ1OGFmMSIsImlhdCI6MTc2MzIxMjA3MCwiZXhwIjoxNzY1ODA0MDcwfQ.enfqDdmKLbuYQcWbmd2jb6KVFX5G1fw46yYvYmENXpY
 
 ### Cancel Booking
 PUT {{baseUrl}}/bookings/BOOKING_ID_HERE/cancel
 Authorization: Bearer {{userToken}}
 Content-Type: application/json
 
-{
+{ 
   "reason": "Changed my schedule"
 }
 
@@ -168,7 +170,7 @@ Content-Type: application/json
 
 ### Get Agent Profile
 GET {{baseUrl}}/agents/profile
-Authorization: Bearer {{agentToken}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWFhZmI2YjI3NzZiNzVkYWJkMmI0YyIsImlhdCI6MTc2MzM2MzI0NCwiZXhwIjoxNzY1OTU1MjQ0fQ.4r94MlWzW-mEjiY6hPRQ37BvX326DJCZgYzEI1vYFDs
 
 ### Get Agent's Bookings
 GET {{baseUrl}}/agents/bookings
@@ -180,11 +182,11 @@ Authorization: Bearer {{agentToken}}
 
 ### Get All Pending Bookings
 GET {{baseUrl}}/agents/bookings/all?status=pending
-Authorization: Bearer {{agentToken}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWFhZmI2YjI3NzZiNzVkYWJkMmI0YyIsImlhdCI6MTc2MzM1NzE5MywiZXhwIjoxNzY1OTQ5MTkzfQ.nKsp8MtB0cT5czN_6z12g0oEOSu1RqlK0FSGeaVZoJs
 
 ### Update Booking Status to Confirmed
-PUT {{baseUrl}}/agents/bookings/BOOKING_ID_HERE/status
-Authorization: Bearer {{agentToken}}
+PUT {{baseUrl}}/agents/bookings/69186eca8fe7431c52d58af6/status
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWFhZmI2YjI3NzZiNzVkYWJkMmI0YyIsImlhdCI6MTc2MzM1NzE5MywiZXhwIjoxNzY1OTQ5MTkzfQ.nKsp8MtB0cT5czN_6z12g0oEOSu1RqlK0FSGeaVZoJs
 Content-Type: application/json
 
 {
@@ -201,8 +203,8 @@ Content-Type: application/json
 }
 
 ### Update Booking Status to Completed
-PUT {{baseUrl}}/agents/bookings/BOOKING_ID_HERE/status
-Authorization: Bearer {{agentToken}}
+PUT {{baseUrl}}/agents/bookings/6918484d0cc0592b95900515/status
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWFhZmI2YjI3NzZiNzVkYWJkMmI0YyIsImlhdCI6MTc2MzM2NDczNCwiZXhwIjoxNzY1OTU2NzM0fQ.2-8QlvAxlEGi6HR-8BRah-Gk13gCaucYPdopbg9bSNo
 Content-Type: application/json
 
 {
@@ -210,8 +212,8 @@ Content-Type: application/json
 }
 
 ### Update Payment Status
-PUT {{baseUrl}}/agents/bookings/BOOKING_ID_HERE/payment
-Authorization: Bearer {{agentToken}}
+PUT {{baseUrl}}/agents/bookings/6918484d0cc0592b95900515/payment
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWFhZmI2YjI3NzZiNzVkYWJkMmI0YyIsImlhdCI6MTc2MzM2NDczNCwiZXhwIjoxNzY1OTU2NzM0fQ.2-8QlvAxlEGi6HR-8BRah-Gk13gCaucYPdopbg9bSNo
 Content-Type: application/json
 
 {
@@ -224,11 +226,11 @@ Content-Type: application/json
 
 ### Submit Feedback
 POST {{baseUrl}}/feedback
-Authorization: Bearer {{userToken}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTg2ZTljOGZlNzQzMWM1MmQ1OGFmMSIsImlhdCI6MTc2MzM2NDg3MCwiZXhwIjoxNzY1OTU2ODcwfQ.iQJf3ya8I-Gj8mhVxldoOmpdzlTGxiqUBJZI2HV0Hk8
 Content-Type: application/json
 
 {
-  "bookingId": "BOOKING_ID_HERE",
+  "bookingId": "6918484d0cc0592b95900515",
   "rating": 5,
   "reviewMessage": "Excellent service! The therapist was very professional and the treatment was effective. Highly recommend!"
 }
@@ -245,4 +247,4 @@ GET {{baseUrl}}/feedback/service/SERVICE_ID_HERE
 ###################################################
 
 ### Get Invoice/Billing Details
-GET {{baseUrl}}/billing/BOOKING_ID_HERE
+GET {{baseUrl}}/billing/6918484d0cc0592b95900515
