@@ -1,18 +1,69 @@
 const Booking = require('../models/Booking');
 const Agent = require('../models/Agent');
 
+// const getAgentBookings = async (req, res) => {
+//   try {
+//     const bookings = await Booking.find({ agentId: req.agent._id })
+//       .populate('serviceId', 'title description price durationMins category imageUrl')
+//       .populate('userId', 'name email phone address')
+//       .sort({ createdAt: -1 });
+//     console.log("from agent controllers=>",bookings)
+//     res.json({
+//       success: true,
+//       count: bookings.length,
+//       data: bookings,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+// const getAgentBookings = async (req, res) => {
+//   try {
+//     const agentId = req.agent._id;
+
+//     // Fetch bookings assigned to this agent
+//     const bookings = await Booking.find({ agentId })
+//       .populate("userId", "name phone address")
+//       .populate("serviceId");
+
+//     // Fetch agent's current rating
+//     const agent = await Agent.findById(agentId).select("rating");
+
+//     res.status(200).json({
+//       success: true,
+//       count: bookings.length,
+//       rating: agent?.rating || 0,
+//       data: bookings,
+//     });
+
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
 const getAgentBookings = async (req, res) => {
   try {
-    const bookings = await Booking.find({ agentId: req.agent._id })
-      .populate('serviceId', 'title description price durationMins category')
-      .populate('userId', 'name email phone address')
-      .sort({ createdAt: -1 });
+    const agentId = req.agent._id;
 
-    res.json({
+    const bookings = await Booking.find({ agentId })
+      .populate("userId", "name phone address")
+      .populate("serviceId");
+
+    // Fetch agent rating (already updated via feedback)
+    const agent = await Agent.findById(agentId).select("rating");
+
+    res.status(200).json({
       success: true,
-      count: bookings.length,
       data: bookings,
+      count: bookings.length,
+      rating: agent?.rating || 0,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -20,7 +71,6 @@ const getAgentBookings = async (req, res) => {
     });
   }
 };
-
 const getAllBookings = async (req, res) => {
   try {
     const { status } = req.query;
@@ -186,6 +236,8 @@ const getAgentProfile = async (req, res) => {
     });
   }
 };
+
+
 
 module.exports = {
   getAgentBookings,

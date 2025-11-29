@@ -1,5 +1,6 @@
 ### Base URL
-@baseUrl = http://localhost:5000/api
+@baseUrl =  http://localhost:5000/api
+# https://arunalayabackendv2-1.onrender.com/api
 @userToken = YOUR_USER_TOKEN_HERE
 @agentToken = YOUR_AGENT_TOKEN_HERE
 
@@ -27,7 +28,7 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "aayush1@gmail.com",
+  "email": "aayush@gmail.com",
   "password": "123456"
 }
 
@@ -48,8 +49,8 @@ POST {{baseUrl}}/auth/agent/login
 Content-Type: application/json
 
 {
-  "email": "rajesh@physio.com",
-  "password": "agent123"
+  "email": "v@gmail.com",
+  "password": "123456"
 }
 
 ###################################################
@@ -58,7 +59,7 @@ Content-Type: application/json
 
 ### Get User Profile
 GET {{baseUrl}}/users/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTgyZDYyMzQxMzVhYTM3MmYwNjdkYSIsImlhdCI6MTc2MzE5MzYxOSwiZXhwIjoxNzY1Nzg1NjE5fQ.wb5CG336IVdJZrrIsb-4cKQvT5Hpi8pi3YTV4BkcNPk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MmFjNWIxZGVkNDJiZWViMWRlNDExMCIsImlhdCI6MTc2NDQxMTEzMCwiZXhwIjoxNzY3MDAzMTMwfQ.GOpfV6pcR1RHUvhGZlqKUE8AJakcsp9LB3VjMZAOM9U
 
 ### Update User Profile
 PUT {{baseUrl}}/users/profile
@@ -85,26 +86,28 @@ POST {{baseUrl}}/services
 Content-Type: application/json
 
 {
-  "title": "Full Body Massage Therapy",
-  "description": "Complete body massage therapy for pain relief and relaxation. Includes deep tissue massage and stretching exercises.",
-  "price": 800,
-  "durationMins": 60,
-  "category": "Pain Management",
-  "imageUrl": "https://images.pexels.com/photos/3757942/pexels-photo-3757942.jpeg"
+  "title": "Senior Comfort Massage",
+  "description": "A light and nurturing massage designed for seniors to ease joint stiffness, enhance mobility, and promote relaxation without strain.",
+  "price": 650,
+  "durationMins": 50,
+  "category": "Elderly Care",
+  "imageUrl": "https://i.pinimg.com/1200x/94/0e/dd/940edd9e429cef6c06a77de6ff3cb800.jpg"
 }
+
+
 
 ### Create Another Service
 POST {{baseUrl}}/services
 Content-Type: application/json
 
 {
-  "title": "Sports Injury Recovery",
-  "description": "Specialized therapy for sports-related injuries. Focuses on faster recovery and preventing future injuries.",
-  "price": 1200,
-  "durationMins": 90,
-  "category": "Sports Injury",
-  "imageUrl": "https://images.pexels.com/photos/6111597/pexels-photo-6111597.jpeg"
-}
+    "title": "Knee Replacement Rehabilitation",
+    "description": "Specialized physiotherapy following a total knee replacement surgery. Aims to restore full range of motion, strength, and independence.",
+    "price": 1500,
+    "durationMins": 90,
+    "category": "Post Surgery",
+    "imageUrl": "https://images.pexels.com/photos/4038676/pexels-photo-4038676.jpeg"
+  },
 
 ### Get All Services
 GET {{baseUrl}}/services
@@ -152,12 +155,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTg2ZTljO
 ### Get Booking By ID
 
 
-GET {{baseUrl}}/bookings/6918484d0cc0592b95900515
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTg2ZTljOGZlNzQzMWM1MmQ1OGFmMSIsImlhdCI6MTc2MzIxMjA3MCwiZXhwIjoxNzY1ODA0MDcwfQ.enfqDdmKLbuYQcWbmd2jb6KVFX5G1fw46yYvYmENXpY
+GET {{baseUrl}}/bookings/691d92601d85a756ab93321a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTgyZDYyMzQxMzVhYTM3MmYwNjdkYSIsImlhdCI6MTc2NDA0ODMyNSwiZXhwIjoxNzY2NjQwMzI1fQ.9v4CHCndAs43MFsB_Ky26dOEgLAn-2OEKnCMVgBotAk
 
 ### Cancel Booking
-PUT {{baseUrl}}/bookings/BOOKING_ID_HERE/cancel
-Authorization: Bearer {{userToken}}
+PUT {{baseUrl}}/bookings/691d92601d85a756ab93321a/cancel
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTgyZDYyMzQxMzVhYTM3MmYwNjdkYSIsImlhdCI6MTc2NDA0NzIzOSwiZXhwIjoxNzY2NjM5MjM5fQ.SNLAvN-mvGdr-89rqS_Zk4A8gkYF7EO2jlM8kU_az6I
+
 Content-Type: application/json
 
 { 
@@ -170,23 +174,23 @@ Content-Type: application/json
 
 ### Get Agent Profile
 GET {{baseUrl}}/agents/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWFhZmI2YjI3NzZiNzVkYWJkMmI0YyIsImlhdCI6MTc2MzM2MzI0NCwiZXhwIjoxNzY1OTU1MjQ0fQ.4r94MlWzW-mEjiY6hPRQ37BvX326DJCZgYzEI1vYFDs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWQ2YjBiYjFmZTU0MzE2YzMyNjhlMyIsImlhdCI6MTc2MzUzNzExOCwiZXhwIjoxNzY2MTI5MTE4fQ.sCeZ4n-u9OM8V7GJnviyr_nNH8UXaqVH1W_5IZtcMaY
 
 ### Get Agent's Bookings
 GET {{baseUrl}}/agents/bookings
-Authorization: Bearer {{agentToken}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWQ2YjBiYjFmZTU0MzE2YzMyNjhlMyIsImlhdCI6MTc2MzUzNzExOCwiZXhwIjoxNzY2MTI5MTE4fQ.sCeZ4n-u9OM8V7GJnviyr_nNH8UXaqVH1W_5IZtcMaY
 
 ### Get All Bookings (Admin View)
 GET {{baseUrl}}/agents/bookings/all
-Authorization: Bearer {{agentToken}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWQ2YjBiYjFmZTU0MzE2YzMyNjhlMyIsImlhdCI6MTc2MzUzNzExOCwiZXhwIjoxNzY2MTI5MTE4fQ.sCeZ4n-u9OM8V7GJnviyr_nNH8UXaqVH1W_5IZtcMaY
 
 ### Get All Pending Bookings
 GET {{baseUrl}}/agents/bookings/all?status=pending
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWFhZmI2YjI3NzZiNzVkYWJkMmI0YyIsImlhdCI6MTc2MzM1NzE5MywiZXhwIjoxNzY1OTQ5MTkzfQ.nKsp8MtB0cT5czN_6z12g0oEOSu1RqlK0FSGeaVZoJs
 
 ### Update Booking Status to Confirmed
-PUT {{baseUrl}}/agents/bookings/69186eca8fe7431c52d58af6/status
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWFhZmI2YjI3NzZiNzVkYWJkMmI0YyIsImlhdCI6MTc2MzM1NzE5MywiZXhwIjoxNzY1OTQ5MTkzfQ.nKsp8MtB0cT5czN_6z12g0oEOSu1RqlK0FSGeaVZoJs
+PUT {{baseUrl}}/agents/bookings/6925a924533b47eae9f64706/status
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWQ1Mjk3NmI5ZjA3N2RmNGM1MGM3OCIsImlhdCI6MTc2NDA3NTk5MCwiZXhwIjoxNzY2NjY3OTkwfQ.d9ljo8IQAW3S3M7xEXU9_2sOtVe4nleEy3uo9lQa6P0
 Content-Type: application/json
 
 {
@@ -203,8 +207,8 @@ Content-Type: application/json
 }
 
 ### Update Booking Status to Completed
-PUT {{baseUrl}}/agents/bookings/6918484d0cc0592b95900515/status
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWFhZmI2YjI3NzZiNzVkYWJkMmI0YyIsImlhdCI6MTc2MzM2NDczNCwiZXhwIjoxNzY1OTU2NzM0fQ.2-8QlvAxlEGi6HR-8BRah-Gk13gCaucYPdopbg9bSNo
+PUT {{baseUrl}}/agents/bookings/6926992d5f8849685bdbde5e/status
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWQ1Mjk3NmI5ZjA3N2RmNGM1MGM3OCIsImlhdCI6MTc2NDA3NTk5MCwiZXhwIjoxNzY2NjY3OTkwfQ.d9ljo8IQAW3S3M7xEXU9_2sOtVe4nleEy3uo9lQa6P0
 Content-Type: application/json
 
 {
@@ -212,7 +216,7 @@ Content-Type: application/json
 }
 
 ### Update Payment Status
-PUT {{baseUrl}}/agents/bookings/6918484d0cc0592b95900515/payment
+PUT {{baseUrl}}/agents/bookings/6926992d5f8849685bdbde5e/payment
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWFhZmI2YjI3NzZiNzVkYWJkMmI0YyIsImlhdCI6MTc2MzM2NDczNCwiZXhwIjoxNzY1OTU2NzM0fQ.2-8QlvAxlEGi6HR-8BRah-Gk13gCaucYPdopbg9bSNo
 Content-Type: application/json
 
