@@ -231,7 +231,7 @@ const SERVICE_CENTER_LOCATION = {
 const createBooking = async (req, res) => {
   try {
     const { serviceId, selectedDate, selectedTime, userAddress } = req.body;
-
+    console.log("Authenticated User ID:", req.user._id || req.user.id);
     // Validate required fields
     if (!serviceId || !selectedDate || !selectedTime || !userAddress) {
       return res.status(400).json({
@@ -242,6 +242,7 @@ const createBooking = async (req, res) => {
 
     // Find service
     const service = await Service.findById(serviceId);
+    console.log("Service Found:", service);
     if (!service) {
       return res.status(404).json({
         success: false,
@@ -252,12 +253,22 @@ const createBooking = async (req, res) => {
     // -----------------------------------------------------
     // 📌 Convert Address → Coordinates (Free API)
     // -----------------------------------------------------
+    // const geoRes = await axios.get(
+    //   `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+    //     userAddress
+    //   )}&format=json&limit=1`
+    // );
     const geoRes = await axios.get(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-        userAddress
-      )}&format=json&limit=1`
-    );
-
+  `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+    userAddress
+  )}&format=json&limit=1`,
+  {
+    headers: {
+      // **Is line ko copy-paste karke apne email se badal dein**
+      'User-Agent': 'ArunalayaBookingService/1.0 (ar0671362@gmail.com)', 
+    },
+  }
+);
     if (geoRes.data.length === 0) {
       return res.status(400).json({
         success: false,
@@ -335,7 +346,7 @@ const createBooking = async (req, res) => {
     console.error("Booking Error:", error);
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "from" + error.message,
     });
   }
 };

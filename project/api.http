@@ -1,6 +1,11 @@
 ### Base URL
-@baseUrl =  http://localhost:5000/api
+@baseUrl = https://arunalayabackendv2-1.onrender.com/api
+# https://arunalayabackendv2.vercel.app/api
 # https://arunalayabackendv2-1.onrender.com/api
+# http://localhost:5000/api 
+# 
+#  
+# 
 @userToken = YOUR_USER_TOKEN_HERE
 @agentToken = YOUR_AGENT_TOKEN_HERE
 
@@ -134,12 +139,12 @@ DELETE {{baseUrl}}/services/SERVICE_ID_HERE
 
 ### Create Booking
 POST {{baseUrl}}/bookings
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTg2ZTljOGZlNzQzMWM1MmQ1OGFmMSIsImlhdCI6MTc2MzIxMjA3MCwiZXhwIjoxNzY1ODA0MDcwfQ.enfqDdmKLbuYQcWbmd2jb6KVFX5G1fw46yYvYmENXpY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MmFjNWIxZGVkNDJiZWViMWRlNDExMCIsImlhdCI6MTc2NDQzMDMxMywiZXhwIjoxNzY3MDIyMzEzfQ.egCnrrsutGc24OTCzIOfXTnMP46v0RjRhYqveLGhoTc 
 Content-Type: application/json
 
 {
-  "serviceId": "6918454579fb2a8afacccbb3",
-  "selectedDate": "2025-11-20",
+  "serviceId": "692ac8ccded42beeb1de4144",
+  "selectedDate": "2025-11-29",
   "selectedTime": "11:00 AM",
   "userAddress": "adarsh nagar",
   "coordinates": {
