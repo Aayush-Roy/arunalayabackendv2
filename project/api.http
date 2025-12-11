@@ -1,5 +1,6 @@
 ### Base URL
 @baseUrl = https://arunalayabackendv2-1.onrender.com/api
+# 
 # https://arunalayabackendv2.vercel.app/api
 # https://arunalayabackendv2-1.onrender.com/api
 # http://localhost:5000/api 
@@ -42,8 +43,8 @@ POST {{baseUrl}}/auth/agent/signup
 Content-Type: application/json
 
 {
-  "name": "Dr. Rajesh Sharma",
-  "email": "rajesh@physio.com",
+  "name": "Dr. Ajay Sharma",
+  "email": "ajay@physio.com",
   "password": "agent123",
   "phone": "9988776655",
   "specialization": "Sports Physiotherapy"
@@ -54,8 +55,8 @@ POST {{baseUrl}}/auth/agent/login
 Content-Type: application/json
 
 {
-  "email": "v@gmail.com",
-  "password": "123456"
+  "email": "rahul@physio.com",
+  "password": "agent123"
 }
 
 ###################################################
@@ -183,11 +184,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWQ2YjBiY
 
 ### Get Agent's Bookings
 GET {{baseUrl}}/agents/bookings
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWQ2YjBiYjFmZTU0MzE2YzMyNjhlMyIsImlhdCI6MTc2MzUzNzExOCwiZXhwIjoxNzY2MTI5MTE4fQ.sCeZ4n-u9OM8V7GJnviyr_nNH8UXaqVH1W_5IZtcMaY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MmQ2MDg3Yjc2MjMwOThkOGUzMzU1MSIsImlhdCI6MTc2NDY3MDI5NiwiZXhwIjoxNzY3MjYyMjk2fQ.x1ueJA_js4Zev7Qnc4OQn5OxQp74my4QRhMCNp69GLM
 
-### Get All Bookings (Admin View)
 GET {{baseUrl}}/agents/bookings/all
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWQ2YjBiYjFmZTU0MzE2YzMyNjhlMyIsImlhdCI6MTc2MzUzNzExOCwiZXhwIjoxNzY2MTI5MTE4fQ.sCeZ4n-u9OM8V7GJnviyr_nNH8UXaqVH1W_5IZtcMaY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MmQ2MDg3Yjc2MjMwOThkOGUzMzU1MSIsImlhdCI6MTc2NDY3MDI5NiwiZXhwIjoxNzY3MjYyMjk2fQ.x1ueJA_js4Zev7Qnc4OQn5OxQp74my4QRhMCNp69GLM
 
 ### Get All Pending Bookings
 GET {{baseUrl}}/agents/bookings/all?status=pending
@@ -228,6 +228,15 @@ Content-Type: application/json
 {
   "paymentStatus": "paid"
 }
+
+###################################################
+# GET ALL AGENTS (ADMIN / INTERNAL USE)
+###################################################
+
+### Get All Agents
+GET {{baseUrl}}/agents/all
+Authorization: Bearer {{agentToken}}   # (optional, agar required ho)
+
 
 ###################################################
 # FEEDBACK ENDPOINTS

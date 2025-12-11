@@ -197,7 +197,12 @@
 const axios = require("axios");
 const mongoose = require("mongoose");
 const Booking = require("../models/Booking");
+const Agent = require("../models/Agent");
 const Service = require("../models/Service");
+const User = require("../models/User");
+// const { sendPushNotification } = require("../utils/sendPushNotification");
+const {sendPushNotification} = require("../utils/sendPushNotification");
+
 const ObjectId = mongoose.Types.ObjectId;
 const { calculateDistance } = require("../utils/distance");
 const {
@@ -205,6 +210,7 @@ const {
   calculateTravelCost,
   calculateFinalBill,
 } = require("../utils/calculateCost");
+
 
 // Service Center Origin Location
 const SERVICE_CENTER_LOCATION = {
@@ -214,25 +220,180 @@ const SERVICE_CENTER_LOCATION = {
 
 
 
-// const findBooking = async () => {
+
+
+
+
+//Auto Assign 2
+// const createBooking = async (req, res) => {
 //   try {
-//     const res = await Booking.find({ _id: "691d92601d85a756ab93321a" });
-//     console.log("Result:", res);
-//   } catch (err) {
-//     console.error("Error:", err);
+//     const { serviceId, selectedDate, selectedTime, userAddress } = req.body;
+
+//     // Logged in user
+//     const userId = req.user._id || req.user.id;
+
+//     // ---------------------------
+//     // 1️⃣ VALIDATION
+//     // ---------------------------
+//     if (!serviceId || !selectedDate || !selectedTime || !userAddress) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Please provide all required fields",
+//       });
+//     }
+
+//     // ---------------------------
+//     // 2️⃣ SERVICE FETCH
+//     // ---------------------------
+//     const service = await Service.findById(serviceId);
+//     if (!service) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Service not found",
+//       });
+//     }
+
+//     // ---------------------------
+//     // 3️⃣ ADDRESS → COORDINATES
+//     // ---------------------------
+//     const geoRes = await axios.get(
+//       `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+//         userAddress
+//       )}&format=json&limit=1`,
+//       {
+//         headers: {
+//           "User-Agent": "ArunalayaBookingService/1.0 (ar0671362@gmail.com)",
+//         },
+//       }
+//     );
+
+//     if (!geoRes.data.length) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Unable to fetch coordinates for this address",
+//       });
+//     }
+
+//     const latitude = parseFloat(geoRes.data[0].lat);
+//     const longitude = parseFloat(geoRes.data[0].lon);
+
+//     // ---------------------------
+//     // 4️⃣ DISTANCE CALCULATION
+//     // ---------------------------
+//     const distance = calculateDistance(
+//       SERVICE_CENTER_LOCATION.latitude,
+//       SERVICE_CENTER_LOCATION.longitude,
+//       latitude,
+//       longitude
+//     );
+
+//     if (distance > 7) {
+//       return res.status(400).json({
+//         success: false,
+//         message: `Service not available in your area. You are ${distance.toFixed(
+//           1
+//         )} km away (max 7 km).`,
+//       });
+//     }
+
+//     // ---------------------------
+//     // 5️⃣ TRAVEL + BILL CALC
+//     // ---------------------------
+//     const travelTime = calculateTravelTime(distance);
+//     const travelCost = calculateTravelCost(distance);
+//     const finalBillAmount = calculateFinalBill(service.price, travelCost);
+
+//     // ---------------------------
+//     // 6️⃣ AGENT AUTO-ASSIGN
+//     // ⭐ REALTIME LEAST BUSY AGENT SYSTEM ⭐
+//     // ---------------------------
+//     const agents = await Agent.aggregate([
+//       {
+//         $lookup: {
+//           from: "bookings",
+//           localField: "_id",
+//           foreignField: "agentId",
+//           as: "assignedBookings",
+//         },
+//       },
+//       {
+//         $addFields: {
+//           liveBookingCount: { $size: "$assignedBookings" },
+//         },
+//       },
+//       {
+//         $match: {
+//           isActive: true, // Only active agents
+//         },
+//       },
+//       {
+//         $sort: { liveBookingCount: 1 }, // Least busy first
+//       },
+//       { $limit: 1 },
+//     ]);
+
+//     if (!agents.length) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "No physiotherapists available right now",
+//       });
+//     }
+
+//     const agent = agents[0];
+
+//     // ---------------------------
+//     // 7️⃣ CREATE BOOKING
+//     // ---------------------------
+//     const booking = await Booking.create({
+//       userId,
+//       serviceId,
+//       selectedDate,
+//       selectedTime,
+//       userAddress,
+//       coordinates: { latitude, longitude },
+//       travelDistance: distance,
+//       travelTime,
+//       travelCost,
+//       servicePrice: service.price,
+//       finalBillAmount,
+
+//       agentId: agent._id,
+//       bookingStatus: "pending",
+//     });
+
+//     // ---------------------------
+//     // 8️⃣ POPULATE RESPONSE
+//     // ---------------------------
+//     const populatedBooking = await Booking.findById(booking._id)
+//       .populate(
+//         "serviceId",
+//         "title description price durationMins category imageUrl"
+//       )
+//       .populate("userId", "name email phone")
+//       .populate("agentId", "name phone specialization");
+
+//     return res.status(201).json({
+//       success: true,
+//       message: "Booking created & therapist auto-assigned successfully",
+//       data: populatedBooking,
+//     });
+//   } catch (error) {
+//     console.error("Booking Error:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
 //   }
+
+  
 // };
 
-// findBooking();
-
-// -----------------------------------------------------
-// 📌 CREATE BOOKING
-// -----------------------------------------------------
 const createBooking = async (req, res) => {
   try {
     const { serviceId, selectedDate, selectedTime, userAddress } = req.body;
-    console.log("Authenticated User ID:", req.user._id || req.user.id);
-    // Validate required fields
+
+    const userId = req.user._id || req.user.id;
+
     if (!serviceId || !selectedDate || !selectedTime || !userAddress) {
       return res.status(400).json({
         success: false,
@@ -240,9 +401,7 @@ const createBooking = async (req, res) => {
       });
     }
 
-    // Find service
     const service = await Service.findById(serviceId);
-    console.log("Service Found:", service);
     if (!service) {
       return res.status(404).json({
         success: false,
@@ -250,26 +409,18 @@ const createBooking = async (req, res) => {
       });
     }
 
-    // -----------------------------------------------------
-    // 📌 Convert Address → Coordinates (Free API)
-    // -----------------------------------------------------
-    // const geoRes = await axios.get(
-    //   `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-    //     userAddress
-    //   )}&format=json&limit=1`
-    // );
     const geoRes = await axios.get(
-  `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-    userAddress
-  )}&format=json&limit=1`,
-  {
-    headers: {
-      // **Is line ko copy-paste karke apne email se badal dein**
-      'User-Agent': 'ArunalayaBookingService/1.0 (ar0671362@gmail.com)', 
-    },
-  }
-);
-    if (geoRes.data.length === 0) {
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+        userAddress
+      )}&format=json&limit=1`,
+      {
+        headers: {
+          "User-Agent": "ArunalayaBookingService/1.0 (ar0671362@gmail.com)",
+        },
+      }
+    );
+
+    if (!geoRes.data.length) {
       return res.status(400).json({
         success: false,
         message: "Unable to fetch coordinates for this address",
@@ -279,9 +430,6 @@ const createBooking = async (req, res) => {
     const latitude = parseFloat(geoRes.data[0].lat);
     const longitude = parseFloat(geoRes.data[0].lon);
 
-    // -----------------------------------------------------
-    // 📌 Calculate Distance
-    // -----------------------------------------------------
     const distance = calculateDistance(
       SERVICE_CENTER_LOCATION.latitude,
       SERVICE_CENTER_LOCATION.longitude,
@@ -292,157 +440,113 @@ const createBooking = async (req, res) => {
     if (distance > 7) {
       return res.status(400).json({
         success: false,
-        message: "Service not available in your area",
-        distance,
+        message: `Service not available in your area. You are ${distance.toFixed(
+          1
+        )} km away (max 7 km).`,
       });
     }
 
-    // -----------------------------------------------------
-    // 📌 Travel calculations
-    // -----------------------------------------------------
     const travelTime = calculateTravelTime(distance);
     const travelCost = calculateTravelCost(distance);
     const finalBillAmount = calculateFinalBill(service.price, travelCost);
 
-    // -----------------------------------------------------
-    // 📌 Create Booking
-    // -----------------------------------------------------
-    // const booking = await Booking.create({
-    //   userId: req.user._id,
-    //   serviceId,
-    //   selectedDate,
-    //   selectedTime,
-    //   userAddress,
-    //   coordinates: { latitude, longitude },
-    //   travelDistance: distance,
-    //   travelTime,
-    //   travelCost,
-    //   servicePrice: service.price,
-    //   finalBillAmount,
-    // });
-    const booking = await Booking.create({
-  userId: req.user._id || req.user.id,
-  serviceId,
-  selectedDate,
-  selectedTime,
-  userAddress,
-  coordinates: { latitude, longitude },
-  travelDistance: distance,
-  travelTime,
-  travelCost,
-  servicePrice: service.price,
-  finalBillAmount,
-});
+    const agents = await Agent.aggregate([
+      {
+        $lookup: {
+          from: "bookings",
+          localField: "_id",
+          foreignField: "agentId",
+          as: "assignedBookings",
+        },
+      },
+      {
+        $addFields: {
+          liveBookingCount: { $size: "$assignedBookings" },
+        },
+      },
+      {
+        $match: {
+          isActive: true,
+        },
+      },
+      {
+        $sort: { liveBookingCount: 1 },
+      },
+      { $limit: 1 },
+    ]);
 
+    if (!agents.length) {
+      return res.status(400).json({
+        success: false,
+        message: "No physiotherapists available right now",
+      });
+    }
+
+    const agent = agents[0];
+
+    // ---------------------------
+    // 7️⃣ CREATE BOOKING
+    // ---------------------------
+    const booking = await Booking.create({
+      userId,
+      serviceId,
+      selectedDate,
+      selectedTime,
+      userAddress,
+      coordinates: { latitude, longitude },
+      travelDistance: distance,
+      travelTime,
+      travelCost,
+      servicePrice: service.price,
+      finalBillAmount,
+      agentId: agent._id,
+      bookingStatus: "pending",
+    });
+
+    // -------------------------------------------------------
+    // 8️⃣ SEND PUSH NOTIFICATION TO USER AFTER BOOKING CREATED
+    // -------------------------------------------------------
+    const user = await User.findById(userId);
+
+    if (user?.expoPushToken) {
+      await sendPushNotification(
+        user.expoPushToken,
+        "Booking Confirmed 🎉",
+        `Your booking for ${service.title} is created successfully.`,
+        { bookingId: booking._id.toString() }
+      );
+    }
+    console.log("🔥 REACHED PUSH CODE");
+console.log("User Token:", user?.expoPushToken);
+
+    // ---------------------------
+    // 9️⃣ POPULATE RESPONSE
+    // ---------------------------
     const populatedBooking = await Booking.findById(booking._id)
-      .populate("serviceId", "title description price durationMins category imageUrl")
-      .populate("userId", "name email phone");
+      .populate(
+        "serviceId",
+        "title description price durationMins category imageUrl"
+      )
+      .populate("userId", "name email phone")
+      .populate("agentId", "name phone specialization");
 
     return res.status(201).json({
       success: true,
+      message: "Booking created & therapist auto-assigned successfully",
       data: populatedBooking,
     });
   } catch (error) {
     console.error("Booking Error:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: "from" + error.message,
+      message: error.message,
     });
   }
 };
-// const createBooking = async (req, res) => {
-//   try {
-//     // ⚠️ Updated: Expect userLatitude and userLongitude from the client
-//     const { serviceId, selectedDate, selectedTime, userAddress, userLatitude, userLongitude } = req.body;
 
-//     // Validate required fields (now includes coordinates)
-//     if (!serviceId || !selectedDate || !selectedTime || !userAddress || userLatitude === undefined || userLongitude === undefined) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Please provide all required fields, including location coordinates",
-//       });
-//     }
 
-//     // Find service
-//     const service = await Service.findById(serviceId);
-//     if (!service) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "Service not found",
-//       });
-//     }
 
-//     // -----------------------------------------------------
-//     // ❌ OLD BLOCK: Nominatim Geocoding Block REMOVED
-//     // Nominatim का उपयोग हटा दिया गया है क्योंकि यह एरर दे रहा था।
-//     // -----------------------------------------------------
 
-//     // ⭐️ New: Use coordinates received directly from the client
-//     const latitude = parseFloat(userLatitude);
-//     const longitude = parseFloat(userLongitude);
-
-//     // -----------------------------------------------------
-//     // 📌 Calculate Distance (अब क्लाइंट कोऑर्डिनेट्स का उपयोग करता है)
-//     // -----------------------------------------------------
-//     const distance = calculateDistance(
-//       SERVICE_CENTER_LOCATION.latitude,
-//       SERVICE_CENTER_LOCATION.longitude,
-//       latitude, // Client Latitude
-//       longitude // Client Longitude
-//     );
-//     console.log("Calculated Distance:", distance);
-
-//     if (distance > 7) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Service not available in your area",
-//         distance,
-//       });
-//     }
-
-//     // -----------------------------------------------------
-//     // 📌 Travel calculations (Remains the same)
-//     // -----------------------------------------------------
-//     const travelTime = calculateTravelTime(distance);
-//     const travelCost = calculateTravelCost(distance);
-//     const finalBillAmount = calculateFinalBill(service.price, travelCost);
-
-//     // -----------------------------------------------------
-//     // 📌 Create Booking
-//     // -----------------------------------------------------
-//     const booking = await Booking.create({
-//       userId: req.user._id || req.user.id,
-//       serviceId,
-//       selectedDate,
-//       selectedTime,
-//       userAddress,
-//       coordinates: { latitude, longitude }, // Save the client's coordinates
-//       travelDistance: distance,
-//       travelTime,
-//       travelCost,
-//       servicePrice: service.price,
-//       finalBillAmount,
-//     });
-
-//     const populatedBooking = await Booking.findById(booking._id)
-//       .populate("serviceId", "title description price durationMins category imageUrl")
-//       .populate("userId", "name email phone");
-
-//     return res.status(201).json({
-//       success: true,
-//       data: populatedBooking,
-//     });
-//   } catch (error) {
-//     console.error("Booking Error:", error);
-//     res.status(500).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
-// -----------------------------------------------------
-// 📌 GET USER BOOKINGS
-// -----------------------------------------------------
 const getUserBookings = async (req, res) => {
   try {
     const bookings = await Booking.find({ userId: req.user.id })

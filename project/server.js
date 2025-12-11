@@ -10,7 +10,7 @@ const bookingRoutes = require('./src/routes/bookingRoutes');
 const agentRoutes = require('./src/routes/agentRoutes');
 const feedbackRoutes = require('./src/routes/feedbackRoutes');
 const billingRoutes = require('./src/routes/billingRoutes');
-
+const pushRoutes = require("./src/routes/push");
 dotenv.config();
 
 connectDB();
@@ -24,6 +24,7 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 app.use(express.json());
+app.use("/api/push", pushRoutes);
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {

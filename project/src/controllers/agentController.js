@@ -237,6 +237,18 @@ const getAgentProfile = async (req, res) => {
   }
 };
 
+const getAllagentProfiles = async (req, res) => {
+  try {
+    const agents = await Agent.find({}); 
+    res.json({
+      success: true,
+      count: agents.length,
+      data: agents,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+}
 
 
 module.exports = {
@@ -245,4 +257,5 @@ module.exports = {
   updateBookingStatus,
   updatePaymentStatus,
   getAgentProfile,
+  getAllagentProfiles
 };
